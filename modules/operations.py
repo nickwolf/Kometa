@@ -339,6 +339,8 @@ class Operations:
                                 _tvdb_obj = self.config.TVDb.get_tvdb_obj(item_tvdb_id, is_movie=self.library.is_movie)
                             except tvdb.NotFound as err:
                                 logger.debug(str(err))
+                            except tvdb.CircuitOpen:
+                                pass
                             except tvdb.Unavailable as err:
                                 logger.warning(str(err))
                             except Failed as err:
@@ -1241,7 +1243,7 @@ class Operations:
                                                     found_rating = None
                                             if tmdb_item and option == "tmdb":
                                                 try:
-                                                    found_rating = self.config.TMDb.get_episode(tmdb_item.tmdb_id, ep.seasonNumber, ep.episodeNumber).vote_average  # noqa
+                                                    found_rating = self.library.get_tmdb_episode(ep, tmdb_item.tmdb_id).vote_average  # noqa
                                                 except Failed as er:
                                                     logger.error(er)
                                             elif imdb_id and option == "imdb":
